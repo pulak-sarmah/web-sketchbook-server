@@ -4,10 +4,14 @@ import { Server } from "socket.io";
 import cors, { CorsOptions } from "cors";
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000/" }));
+const isDev = app.settings.env === "development";
+const URL = isDev
+  ? "http://localhost:3000"
+  : "https://web-sketchbook.vercel.app";
+app.use(cors({ origin: URL }));
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: "http://localhost:3000/" as CorsOptions,
+  cors: URL as CorsOptions,
 });
 
 io.on("connection", (socket) => {
